@@ -3,10 +3,11 @@ pipeline {
 
     environment {
         NETLIFY_SITE_ID = 'e561f0fe-0fb2-47ca-b575-41eac6b8d226'
-        NETLIFY_AUTH_TOKEN = credentials ('netlify-token')
+        NETLIFY_AUTH_TOKEN = credentials('netlify-token')
     }
+
     stages {
-        
+
         stage('Build') {
             agent {
                 docker {
@@ -85,6 +86,7 @@ pipeline {
                 }
             }
         }
+
         stage('Deploy') {
             agent {
                 docker {
@@ -97,7 +99,7 @@ pipeline {
                 sh '''
                     npm install netlify-cli
                     node_modules/.bin/netlify --version
-                    echo "Deploying to production- Site ID: $NETLIFY_SITE_ID"
+                    echo "Deploying to production - Site ID: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
                     node_modules/.bin/netlify deploy --dir=build --prod
                 '''
@@ -111,10 +113,9 @@ pipeline {
                     reuseNode true
                     args '-u root'
                 }
-
-        environment {
-            CI_ENVIRONMENT_URL = 'https://radiant-taffy-559098.netlify.app'
-        }
+            }
+            environment {
+                CI_ENVIRONMENT_URL = 'https://radiant-taffy-559098.netlify.app'
             }
             steps {
                 sh '''
@@ -136,7 +137,7 @@ pipeline {
                     ])
                 }
             }
-        
+        }
+
     }
-}
 }
