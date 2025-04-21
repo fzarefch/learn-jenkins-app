@@ -112,9 +112,9 @@ pipeline {
                     args '-u root'
                 }
 
-                environment {
-                    CI_ENVIRONMENT_URL = 'https://radiant-taffy-559098.netlify.app'
-                }
+        environment {
+            CI_ENVIRONMENT_URL = 'https://radiant-taffy-559098.netlify.app'
+        }
             }
             steps {
                 sh '''
