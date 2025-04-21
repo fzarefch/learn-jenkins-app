@@ -103,17 +103,18 @@ pipeline {
                 '''
             }
         }
-        stage('Production - E2E') {
+
+        stage('Prod E2E') {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
                     reuseNode true
                     args '-u root'
                 }
-            }
 
-            environment{
-                CI_ENVIRONMENT_URL = 'https://radiant-taffy-559098.netlify.app'
+        environment {
+            CI_ENVIRONMENT_URL = 'https://radiant-taffy-559098.netlify.app'
+        }
             }
             steps {
                 sh '''
@@ -135,7 +136,7 @@ pipeline {
                     ])
                 }
             }
+        
     }
 }
 }
-
