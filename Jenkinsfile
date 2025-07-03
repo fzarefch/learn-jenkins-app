@@ -65,20 +65,16 @@ pipeline {
                             npm install serve
                             node_modules/.bin/serve -s build &
                             sleep 10 
-                            npx playwright test --reporter=line
+                            npx playwright test --reporter=html
                         '''
                     }
                     post {
                         always {
                             publishHTML([
                                 allowMissing: false,
-                                alwaysLinkToLastBuild: false,
-                                icon: '',
-                                keepAll: false,
                                 reportDir: 'playwright-report',
                                 reportFiles: 'index.html',
                                 reportName: 'Playwright local',
-                                reportTitles: '',
                                 useWrapperFileDirectly: true
                             ])
                         }
