@@ -72,6 +72,8 @@ pipeline {
                         always {
                             publishHTML([
                                 allowMissing: false,
+                                alwaysLinkToLastBuild: false,
+                                keepAll: false,
                                 reportDir: 'playwright-report',
                                 reportFiles: 'index.html',
                                 reportName: 'Playwright local',
@@ -95,14 +97,14 @@ pipeline {
                 sh '''
                     npm install netlify-cli@20.1.1
                     node_modules/.bin/netlify --version
-                    echo "Deploying to staging- Site ID: $NETLIFY_SITE_ID"
+                    echo "Deploying to staging - Site ID: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
                     node_modules/.bin/netlify deploy --dir=build 
                 '''
-    }
-}
-       stage('Approval') {
+            }
+        }
 
+        stage('Approval') {
             steps {
                 input message: 'Do you wish to deploy to production?', ok: 'Yes, I am sure!'
             }
@@ -148,12 +150,10 @@ pipeline {
                     publishHTML([
                         allowMissing: false,
                         alwaysLinkToLastBuild: false,
-                        icon: '',
                         keepAll: false,
                         reportDir: 'playwright-report',
                         reportFiles: 'index.html',
                         reportName: 'Playwright E2E',
-                        reportTitles: '',
                         useWrapperFileDirectly: true
                     ])
                 }
