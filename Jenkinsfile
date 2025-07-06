@@ -5,13 +5,14 @@ pipeline {
         NETLIFY_SITE_ID = 'e561f0fe-0fb2-47ca-b575-41eac6b8d226'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
     }
-    stages {
 
+    stages {
         stage('Build') {
             agent {
                 docker {
                     image 'node:18-alpine'
                     reuseNode true
+                    args '-u 0:0'
                 }
             }
             steps {
@@ -33,12 +34,11 @@ pipeline {
                         docker {
                             image 'node:18-alpine'
                             reuseNode true
+                            args '-u 0:0'
                         }
                     }
-
                     steps {
                         sh '''
-                            #test -f build/index.html
                             npm test
                         '''
                     }
@@ -54,21 +54,29 @@ pipeline {
                         docker {
                             image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
                             reuseNode true
+                            args '-u 0:0'
                         }
                     }
-
                     steps {
                         sh '''
                             npm install serve
                             node_modules/.bin/serve -s build &
                             sleep 10
-                            npx playwright test  --reporter=html
+                            npx playwright test --reporter=html
                         '''
                     }
-
                     post {
                         always {
-                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                            publishHTML([
+                                allowMissing: false,
+                                alwaysLinkToLastBuild: false,
+                                keepAll: false,
+                                reportDir: 'playwright-report',
+                                reportFiles: 'index.html',
+                                reportName: 'Playwright HTML Report',
+                                reportTitles: '',
+                                useWrapperFileDirectly: true
+                            ])
                         }
                     }
                 }
@@ -80,6 +88,7 @@ pipeline {
                 docker {
                     image 'node:18-alpine'
                     reuseNode true
+                    args '-u 0:0'
                 }
             }
             steps {
